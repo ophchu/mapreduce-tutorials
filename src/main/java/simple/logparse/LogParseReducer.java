@@ -1,13 +1,14 @@
 /*
 * LivePerson copyrights will be here...
 */
-package simple.wordcount;
+package simple.logparse;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import simple.wordcount.WordCountReducer;
 
 import java.io.IOException;
 
@@ -16,15 +17,21 @@ import java.io.IOException;
  * @version 1.0.0
  * @since 12/9/12, 13:43
  */
-public class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+public class LogParseReducer extends Reducer<Text, Text, Text, IntWritable> {
   private static final Logger LOG = LoggerFactory.getLogger(WordCountReducer.class);
 
-  public void reduce(Text key, Iterable<IntWritable> values, Context context)
+  private enum Status {
+    LEVELS_NUM, TOTAL_LINES
+  }
+
+  public void reduce(Text key, Iterable<Text> values, Context context)
           throws IOException, InterruptedException {
     context.setStatus(String.format("Going to process: %s", key.toString()));
+    context.getCounter(Status.LEVELS_NUM).increment(1);
     int sum = 0;
-    for (IntWritable val : values) {
-      sum += val.get();
+    for (Text val : values) {
+      context.getCounter(Status.TOTAL_LINES).increment(1);
+      sum += 1;
     }
     context.write(key, new IntWritable(sum));
   }

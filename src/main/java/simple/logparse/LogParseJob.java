@@ -1,7 +1,7 @@
 /*
 * LivePerson copyrights will be here...
 */
-package simple.wordcount;
+package simple.logparse;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -14,7 +14,9 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import simple.logparse.LogParseReducer;
+import simple.wordcount.WordCountJob;
+import simple.wordcount.WordCountMapper;
+import simple.wordcount.WordCountReducer;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,7 +27,7 @@ import java.util.Date;
  * @version 1.0.0
  * @since 12/9/12, 13:43
  */
-public class WordCountJob {
+public class LogParseJob {
   private static final Logger LOG = LoggerFactory.getLogger(WordCountJob.class);
 
   public final static String JOB_DATE_FORMAT_STRING = "yyyyMMdd-HHmmss";
@@ -35,7 +37,7 @@ public class WordCountJob {
     Configuration conf = new Configuration();
 
     //Set the job's name
-    Job job = new Job(conf, "wordcount");
+    Job job = new Job(conf, "logparse");
 
 
     //Init input format
@@ -43,12 +45,14 @@ public class WordCountJob {
     job.setInputFormatClass(TextInputFormat.class);
 
     //Init mapper
-    job.setMapperClass(WordCountMapper.class);
+    job.setMapperClass(LogParseMapper.class);
     job.setOutputKeyClass(Text.class);
-    job.setOutputValueClass(IntWritable.class);
+    job.setOutputValueClass(Text.class);
+
 
     //Init reducer
     job.setReducerClass(LogParseReducer.class);
+//    job.setReducerClass(WordCountReducer.class);
 
     //Init output format
     job.setOutputFormatClass(TextOutputFormat.class);
