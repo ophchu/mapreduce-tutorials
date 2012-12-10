@@ -48,7 +48,7 @@ public class WordCountJob {
     job.setOutputValueClass(IntWritable.class);
 
     //Init reducer
-    job.setReducerClass(LogParseReducer.class);
+    job.setReducerClass(WordCountReducer.class);
 
     //Init output format
     job.setOutputFormatClass(TextOutputFormat.class);
