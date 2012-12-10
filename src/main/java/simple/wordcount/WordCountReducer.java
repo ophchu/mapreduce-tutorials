@@ -23,9 +23,11 @@ public class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritab
           throws IOException, InterruptedException {
     context.setStatus(String.format("Going to process: %s", key.toString()));
     int sum = 0;
+    //Count number of occurrences
     for (IntWritable val : values) {
       sum += val.get();
     }
+    //Write results
     context.write(key, new IntWritable(sum));
   }
 }
