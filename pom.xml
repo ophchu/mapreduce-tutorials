@@ -44,6 +44,11 @@
       <version>6.1.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-mrunit</artifactId>
+      <version>${hadoop-ver}</version>
+    </dependency>
 
   </dependencies>
 

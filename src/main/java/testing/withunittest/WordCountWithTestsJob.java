@@ -48,7 +48,7 @@ public class WordCountWithTestsJob {
 
     //Init mapper
     //Number of mapper set by the input format
-    job.setMapperClass(WordCountNoTestsMapper.class);
+    job.setMapperClass(WordCountWithTestsMapper.class);
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(IntWritable.class);
 

@@ -23,17 +23,20 @@ public class WordCountWithTestsMapper extends Mapper<LongWritable, Text, Text, I
   private final static IntWritable one = new IntWritable(1);
   private Text wordText = new Text(); //Reuse of the Text object - prevent creation of millions objects
 
-  public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-   //Text input format:
-       //Mappers by blocks
-       //Key == position in file
-       //Value == line text
-       String[] line = WordCountUtils.splitStr(value.toString());
+  public enum Status {WORD_COUNT, LINES_NUM}
 
-       for (String word:line){
-         wordText.set(word);
-         //Write the word + '1'
-         context.write(wordText, one);
-       }
+  public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+    //Text input format:
+    //Mappers by blocks
+    //Key == position in file
+    //Value == line text
+    context.getCounter(Status.LINES_NUM).increment(1);
+    String[] line = WordCountUtils.splitStr(value.toString());
+    context.getCounter(Status.WORD_COUNT).increment(line.length);
+    for (String word : line) {
+      wordText.set(word);
+      //Write the word + '1'
+      context.write(wordText, one);
+    }
   }
 }
