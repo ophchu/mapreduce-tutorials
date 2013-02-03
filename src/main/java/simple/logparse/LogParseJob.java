@@ -5,7 +5,6 @@ package simple.logparse;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -15,8 +14,6 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import simple.wordcount.WordCountJob;
-import simple.wordcount.WordCountMapper;
-import simple.wordcount.WordCountReducer;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

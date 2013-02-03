@@ -1,7 +1,7 @@
 /*
 * LivePerson copyrights will be here...
 */
-package simple.wordcount;
+package testing.withunittest;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
@@ -16,17 +16,15 @@ import java.io.IOException;
  * @version 1.0.0
  * @since 12/9/12, 13:43
  */
-public class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
-  private static final Logger LOG = LoggerFactory.getLogger(WordCountReducer.class);
+public class WordCountWithTestsReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+  private static final Logger LOG = LoggerFactory.getLogger(WordCountWithTestsReducer.class);
 
   public void reduce(Text key, Iterable<IntWritable> values, Context context)
           throws IOException, InterruptedException {
     context.setStatus(String.format("Going to process: %s", key.toString()));
-    int sum = 0;
     //Count number of occurrences
-    for (IntWritable val : values) {
-      sum += val.get();
-    }
+    int sum = WordCountUtils.countValues(values);
+
     //Write results
     context.write(key, new IntWritable(sum));
   }

@@ -1,7 +1,7 @@
 /*
 * LivePerson copyrights will be here...
 */
-package simple.wordcount;
+package testing.nounitest;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -15,7 +15,6 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.mapreduce.lib.partition.HashPartitioner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import testing.nounitest.WordCountNoTestsReducer;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,8 +25,8 @@ import java.util.Date;
  * @version 1.0.0
  * @since 12/9/12, 13:43
  */
-public class WordCountJob {
-  private static final Logger LOG = LoggerFactory.getLogger(WordCountJob.class);
+public class WordCountNoTestsJob {
+  private static final Logger LOG = LoggerFactory.getLogger(WordCountNoTestsJob.class);
 
   public final static String JOB_DATE_FORMAT_STRING = "yyyyMMdd-HHmmss";
 
@@ -48,7 +47,7 @@ public class WordCountJob {
 
     //Init mapper
     //Number of mapper set by the input format
-    job.setMapperClass(WordCountMapper.class);
+    job.setMapperClass(WordCountNoTestsMapper.class);
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(IntWritable.class);
 

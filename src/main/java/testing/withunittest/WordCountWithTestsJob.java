@@ -1,7 +1,7 @@
 /*
 * LivePerson copyrights will be here...
 */
-package simple.wordcount;
+package testing.withunittest;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -15,7 +15,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.mapreduce.lib.partition.HashPartitioner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import testing.nounitest.WordCountNoTestsReducer;
+import testing.nounitest.WordCountNoTestsMapper;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,8 +26,8 @@ import java.util.Date;
  * @version 1.0.0
  * @since 12/9/12, 13:43
  */
-public class WordCountJob {
-  private static final Logger LOG = LoggerFactory.getLogger(WordCountJob.class);
+public class WordCountWithTestsJob {
+  private static final Logger LOG = LoggerFactory.getLogger(WordCountWithTestsJob.class);
 
   public final static String JOB_DATE_FORMAT_STRING = "yyyyMMdd-HHmmss";
 
@@ -48,7 +48,7 @@ public class WordCountJob {
 
     //Init mapper
     //Number of mapper set by the input format
-    job.setMapperClass(WordCountMapper.class);
+    job.setMapperClass(WordCountNoTestsMapper.class);
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(IntWritable.class);
 
@@ -56,7 +56,7 @@ public class WordCountJob {
     job.setPartitionerClass(HashPartitioner.class);
 
     //Init reducer
-    job.setReducerClass(WordCountNoTestsReducer.class);
+    job.setReducerClass(WordCountWithTestsReducer.class);
 
     //User to set the number of reducers!
     job.setNumReduceTasks(5);
