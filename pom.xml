@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <properties>
-    <hadoop-ver>0.20.2-cdh3u1</hadoop-ver>
+    <hadoop-ver>0.20.2-cdh3u5</hadoop-ver>
   </properties>
 
   <groupId>mapreduce-tutorials1</groupId>
@@ -47,6 +47,11 @@
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-mrunit</artifactId>
+      <version>${hadoop-ver}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-minicluster</artifactId>
       <version>${hadoop-ver}</version>
     </dependency>
 
