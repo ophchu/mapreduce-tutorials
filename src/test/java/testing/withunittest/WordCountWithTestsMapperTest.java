@@ -43,14 +43,10 @@ public class WordCountWithTestsMapperTest {
       mapDriver.withOutput(new Text(split), new IntWritable(1));
     }
     mapDriver.runTest();
-//    Counters counters = mapDriver.getCounters();
-//    assertEquals(counters.findCounter(WordCountWithTestsMapper.Status.LINES_NUM).getValue(), lineNum, "Wrong lines num!");
-//    assertEquals(counters.findCounter(WordCountWithTestsMapper.Status.WORD_COUNT).getValue(), wordCount, "Wrong word count!");
-
   }
 
   @Test(dataProvider = "simpleTest")
-  public void Test(String inString, String[] splits, int lineNum, int wordCount) throws IOException {
+  public void countersTest(String inString, String[] splits, int lineNum, int wordCount) throws IOException {
     mapDriver.withInput(new LongWritable(), new Text(inString));
     for (String split : splits) {
       mapDriver.withOutput(new Text(split), new IntWritable(1));
