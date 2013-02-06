@@ -10,6 +10,7 @@ import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mrunit.mapreduce.MapDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -30,21 +31,34 @@ public class WordCountWithTestsMapperTest {
 
   private MapDriver<LongWritable, Text, Text, IntWritable> mapDriver;
 
-  @BeforeTest
+  @BeforeMethod
   public void setUp() {
-    mapDriver = new MapDriver<>(new WordCountWithTestsMapper());
+    mapDriver = new MapDriver<LongWritable, Text, Text, IntWritable>(new WordCountWithTestsMapper());
   }
 
   @Test(dataProvider = "simpleTest")
   public void simpleTest(String inString, String[] splits, int lineNum, int wordCount) throws IOException {
     mapDriver.withInput(new LongWritable(), new Text(inString));
-    mapDriver.withOutput(new Text(splits[0]), new IntWritable(1));
-    mapDriver.run();
+    for (String split : splits) {
+      mapDriver.withOutput(new Text(split), new IntWritable(1));
+    }
+    mapDriver.runTest();
+//    Counters counters = mapDriver.getCounters();
+//    assertEquals(counters.findCounter(WordCountWithTestsMapper.Status.LINES_NUM).getValue(), lineNum, "Wrong lines num!");
+//    assertEquals(counters.findCounter(WordCountWithTestsMapper.Status.WORD_COUNT).getValue(), wordCount, "Wrong word count!");
+
+  }
+
+  @Test(dataProvider = "simpleTest")
+  public void Test(String inString, String[] splits, int lineNum, int wordCount) throws IOException {
+    mapDriver.withInput(new LongWritable(), new Text(inString));
+    for (String split : splits) {
+      mapDriver.withOutput(new Text(split), new IntWritable(1));
+    }
+    mapDriver.runTest();
     Counters counters = mapDriver.getCounters();
     assertEquals(counters.findCounter(WordCountWithTestsMapper.Status.LINES_NUM).getValue(), lineNum, "Wrong lines num!");
     assertEquals(counters.findCounter(WordCountWithTestsMapper.Status.WORD_COUNT).getValue(), wordCount, "Wrong word count!");
-
-    System.out.println();
   }
 
   @DataProvider(name = "simpleTest")
@@ -54,13 +68,4 @@ public class WordCountWithTestsMapperTest {
     res.add(new Object[]{"Hello Mapreduce tests! Nice to meet you!", new String[]{"Hello", "Mapreduce", "tests!", "Nice", "to", "meet", "tou!"}, 1, 7});
     return res.toArray(new Object[res.size()][]);
   }
-  //  @Test(dataProvider = "newFormat", enabled = false)
-  //  public void testReducerSimpleNewFormat(SiteDay sdExpected, List<Text> inLine) throws IOException {
-  //    driver.withInput(sdExpected, inLine)
-  //            .withOutput(MRUnitTestUtils.EMPTY_TEXT, MRUnitTestUtils.EMPTY_TEXT)
-  //            .run();
-  //    Counters counters = driver.getCounters();
-  //    assertEquals(counters.findCounter(MergeSortReducer.Status.HDFS_WRITE).getValue(), 1, "Should has 1 write");
-  //  }
-
 }
