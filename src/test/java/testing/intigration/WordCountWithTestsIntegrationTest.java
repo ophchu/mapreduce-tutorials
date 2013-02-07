@@ -8,9 +8,12 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.MiniMRCluster;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mrunit.types.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import static org.testng.Assert.assertEquals;
 
 /**
  * @author TLV\ophirc
@@ -51,8 +55,8 @@ public class WordCountWithTestsIntegrationTest {
     new File("test-logs").mkdirs();
     //
     System.setProperty("hadoop.log.dir", "test-logs");
-//    System.setProperty("javax.xml.parsers.SAXParserFactory",
-//            "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl");
+    System.setProperty("javax.xml.parsers.SAXParserFactory",
+            "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl");
 
     Configuration conf = new Configuration();
 
@@ -68,7 +72,7 @@ public class WordCountWithTestsIntegrationTest {
 
 
   @Test(dataProvider = "miniClusterTest")
-  public void miniClusterRun(String[] inLines, String[] results, int[] resNum) throws ClassNotFoundException, IOException, InterruptedException {
+  public void miniClusterRun(String[] inLines, String[] expectedTokens, int[] expectedCount) throws ClassNotFoundException, IOException, InterruptedException {
     prepareFiles(inLines);
     //Init job
     WordCountWithTestsJob job = new WordCountWithTestsJob();
@@ -77,7 +81,15 @@ public class WordCountWithTestsIntegrationTest {
     String nameNode = mrCluster.getJobTrackerRunner().getJobTracker().getHostname() + ":" + dfsCluster.getNameNodePort();
     job.runJob(INPUT, OUTPUT, jobTrakcerName, nameNode);
 
-    checkResults(results);
+    List<Pair<String, Integer>> results = readResults();
+
+    assertEquals(results.size(), expectedTokens, "Number of results different than number of expected");
+
+    for (int i=0; i<expectedTokens.length; i++){
+       //Compare token
+      assertEquals(results.get(i).getFirst(), expectedTokens[i], "Token number " + i + " Does not much!");
+      assertEquals(results.get(i).getSecond().intValue(), expectedCount[i], "Count number " + i + " Does not much!");
+    }
   }
 
   private void prepareFiles(String[] inLines) throws IOException {
@@ -95,7 +107,17 @@ public class WordCountWithTestsIntegrationTest {
     }
   }
 
-  private void checkResults(String[] results) throws IOException {
+  private List<Pair<String, Integer>> readResults() throws IOException {
+    List<Pair<String, Integer>> results = new ArrayList<Pair<String, Integer>>();
+    Set<Path> collectedPaths = collectResultPaths();
+    for (Path path : collectedPaths) {
+      collectResults(path, results);
+    }
+    return results;
+  }
+
+
+  private Set<Path> collectResultPaths() throws IOException {
     FileStatus[] paths = dfsCluster.getFileSystem().listStatus(OUTPUT);
 
     Set<Path> collectedPaths = new HashSet<Path>();
@@ -104,24 +126,25 @@ public class WordCountWithTestsIntegrationTest {
         collectedPaths.add(path.getPath());
       }
     }
-
-    System.out.println(collectedPaths.toString());
-    for (Path path : collectedPaths) {
-      dumpResults(path);
-    }
+    return collectedPaths;
   }
 
-  private void dumpResults(Path path) throws IOException {
-    BufferedReader reader = null;
-    String line;
+  private void collectResults(Path path, List<Pair<String, Integer>> results) throws IOException {
+    Text token = new Text();
+    IntWritable count = new IntWritable();
+    DataInputStream dataInput = null;
     try {
-      reader = new BufferedReader(new InputStreamReader(dfsCluster.getFileSystem().open(path)));
-      while ((line = reader.readLine()) != null) {
-        System.out.println(line);
-      }
+      dataInput = new DataInputStream(dfsCluster.getFileSystem().open(path));
+
+      token.readFields(dataInput);
+      count.readFields(dataInput);
+
+      results.add(new Pair<String, Integer>(token.toString(), count.get()));
+    } catch (EOFException eof) {
+
     } finally {
-      if (reader != null) {
-        reader.close();
+      if (dataInput != null) {
+        dataInput.close();
       }
     }
   }
