@@ -1,0 +1,3 @@
+Hello Mapreduce tests
+Testing the minidfscluster
+Hello Mapreduce tests

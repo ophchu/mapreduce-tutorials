@@ -30,7 +30,8 @@ public class WordCountNoTestsJob {
 
   public final static String JOB_DATE_FORMAT_STRING = "yyyyMMdd-HHmmss";
 
-  public static void main(String[] args) throws Exception {
+  public void runJob(String inFile, String outFile) throws Exception {
+
     //Initializing job
     //Configuration created with the default params (in here - local) and override by environment.
     //Will be overrided by dist env.
@@ -42,7 +43,7 @@ public class WordCountNoTestsJob {
     //Init input format to be text input format
     job.setInputFormatClass(TextInputFormat.class);
     //Can be directory or file, local or hdfs ("hdfs://my-cluster:54310/user/ophchu")
-    FileInputFormat.addInputPath(job, new Path(args[0]));
+    FileInputFormat.addInputPath(job, new Path(inFile));
 
 
     //Init mapper
@@ -65,9 +66,14 @@ public class WordCountNoTestsJob {
 
     //Create unique directory
     DateFormat df = new SimpleDateFormat(JOB_DATE_FORMAT_STRING);
-    FileOutputFormat.setOutputPath(job, new Path(args[1], df.format(new Date())));
+    FileOutputFormat.setOutputPath(job, new Path(outFile, df.format(new Date())));
 
     //Run the job
     job.waitForCompletion(true);
+  }
+
+  public static void main(String[] args) throws Exception {
+    WordCountNoTestsJob wcntJob = new WordCountNoTestsJob();
+    wcntJob.runJob(args[0], args[1]);
   }
 }

@@ -8,6 +8,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mrunit.mapreduce.MapDriver;
+import org.apache.hadoop.mrunit.mapreduce.MapReduceDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
@@ -28,32 +29,19 @@ import static org.testng.Assert.assertEquals;
 public class WordCountWithTestsJobTest {
   private static final Logger LOG = LoggerFactory.getLogger(WordCountWithTestsJobTest.class);
 
-  private MapDriver<LongWritable, Text, Text, IntWritable> mapDriver;
+  private MapReduceDriver<LongWritable, Text, Text, IntWritable, Text, IntWritable> mapRedDriver;
 
   @BeforeMethod
   public void setUp() {
-    mapDriver = new MapDriver<LongWritable, Text, Text, IntWritable>(new WordCountWithTestsMapper());
+   mapRedDriver = new MapReduceDriver<LongWritable, Text, Text, IntWritable, Text, IntWritable>(new WordCountWithTestsMapper(), new WordCountWithTestsReducer());
   }
 
   @Test(dataProvider = "simpleTest")
   public void simpleTest(String inString, String[] splits, int lineNum, int wordCount) throws IOException {
-    mapDriver.withInput(new LongWritable(), new Text(inString));
-    for (String split : splits) {
-      mapDriver.withOutput(new Text(split), new IntWritable(1));
-    }
-    mapDriver.runTest();
   }
 
   @Test(dataProvider = "simpleTest")
   public void countersTest(String inString, String[] splits, int lineNum, int wordCount) throws IOException {
-    mapDriver.withInput(new LongWritable(), new Text(inString));
-    for (String split : splits) {
-      mapDriver.withOutput(new Text(split), new IntWritable(1));
-    }
-    mapDriver.runTest();
-    Counters counters = mapDriver.getCounters();
-    assertEquals(counters.findCounter(WordCountWithTestsMapper.Status.LINES_NUM).getValue(), lineNum, "Wrong lines num!");
-    assertEquals(counters.findCounter(WordCountWithTestsMapper.Status.WORD_COUNT).getValue(), wordCount, "Wrong word count!");
   }
 
   @DataProvider(name = "simpleTest")
