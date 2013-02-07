@@ -8,8 +8,8 @@
     <hadoop-ver>0.20.2-cdh3u5</hadoop-ver>
   </properties>
 
-  <groupId>mapreduce-tutorials1</groupId>
-  <artifactId>mapreduce-tutorials1</artifactId>
+  <groupId>mapreduce-tutorials</groupId>
+  <artifactId>mapreduce-tutorials</artifactId>
   <version>1.0</version>
   <dependencies>
 
