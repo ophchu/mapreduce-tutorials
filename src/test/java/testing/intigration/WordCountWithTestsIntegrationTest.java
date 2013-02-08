@@ -71,7 +71,7 @@ public class WordCountWithTestsIntegrationTest {
   }
 
 
-  @Test(dataProvider = "miniClusterTest")
+  @Test(dataProvider = "miniClusterTest", enabled = false)
   public void miniClusterRun(String[] inLines, String[] expectedTokens, int[] expectedCount) throws ClassNotFoundException, IOException, InterruptedException {
     prepareFiles(inLines);
     //Init job

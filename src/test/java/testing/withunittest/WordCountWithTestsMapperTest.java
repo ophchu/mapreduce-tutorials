@@ -36,7 +36,7 @@ public class WordCountWithTestsMapperTest {
     mapDriver = new MapDriver<LongWritable, Text, Text, IntWritable>(new WordCountWithTestsMapper());
   }
 
-  @Test(dataProvider = "simpleTest")
+  @Test(dataProvider = "simpleTest", enabled = false)
   public void simpleTest(String inString, String[] splits, int lineNum, int wordCount) throws IOException {
     mapDriver.withInput(new LongWritable(), new Text(inString));
     for (String split : splits) {
@@ -45,7 +45,7 @@ public class WordCountWithTestsMapperTest {
     mapDriver.runTest();
   }
 
-  @Test(dataProvider = "simpleTest")
+  @Test(dataProvider = "simpleTest", enabled = false)
   public void countersTest(String inString, String[] splits, int lineNum, int wordCount) throws IOException {
     mapDriver.withInput(new LongWritable(), new Text(inString));
     for (String split : splits) {
