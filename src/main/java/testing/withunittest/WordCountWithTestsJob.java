@@ -32,7 +32,7 @@ public class WordCountWithTestsJob {
 
   public final static String JOB_DATE_FORMAT_STRING = "yyyyMMdd-HHmmss";
 
-  public void runJob(Path inFile, Path outFile, String jobTrakcer, String nameNode) throws IOException, ClassNotFoundException, InterruptedException {
+  public void runJob(Path inFile, Path outFile, int reducerNum, String jobTrakcer, String nameNode) throws IOException, ClassNotFoundException, InterruptedException {
     //Initializing job
     //Configuration created with the default params (in here - local) and override by environment.
     //Will be overrided by dist env.
@@ -63,7 +63,7 @@ public class WordCountWithTestsJob {
     job.setReducerClass(WordCountWithTestsReducer.class);
 
     //User to set the number of reducers!
-    job.setNumReduceTasks(5);
+    job.setNumReduceTasks(reducerNum);
 
     //Init output format
     job.setOutputFormatClass(TextOutputFormat.class);
@@ -78,6 +78,6 @@ public class WordCountWithTestsJob {
 
   public static void main(String[] args) throws Exception {
     WordCountWithTestsJob wcntJob = new WordCountWithTestsJob();
-    wcntJob.runJob(new Path(args[0]), new Path(args[1]), "local", "local");
+    wcntJob.runJob(new Path(args[0]), new Path(args[1]), 4, "local", "local");
   }
 }

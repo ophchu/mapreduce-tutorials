@@ -36,7 +36,7 @@ public class WordCountWithTestsMapperTest {
     mapDriver = new MapDriver<LongWritable, Text, Text, IntWritable>(new WordCountWithTestsMapper());
   }
 
-  @Test(dataProvider = "simpleTest", enabled = false)
+  @Test(dataProvider = "simpleTest")
   public void simpleTest(String inString, String[] splits, int lineNum, int wordCount) throws IOException {
     mapDriver.withInput(new LongWritable(), new Text(inString));
     for (String split : splits) {
@@ -45,7 +45,7 @@ public class WordCountWithTestsMapperTest {
     mapDriver.runTest();
   }
 
-  @Test(dataProvider = "simpleTest", enabled = false)
+  @Test(dataProvider = "simpleTest")
   public void countersTest(String inString, String[] splits, int lineNum, int wordCount) throws IOException {
     mapDriver.withInput(new LongWritable(), new Text(inString));
     for (String split : splits) {
@@ -61,7 +61,7 @@ public class WordCountWithTestsMapperTest {
   public Object[][] createSimpleTestData() {
     List<Object[]> res = new ArrayList<Object[]>();
     res.add(new Object[]{"Hello Mapreduce tests", new String[]{"Hello", "Mapreduce", "tests"}, 1, 3});
-    res.add(new Object[]{"Hello Mapreduce tests! Nice to meet you!", new String[]{"Hello", "Mapreduce", "tests!", "Nice", "to", "meet", "tou!"}, 1, 7});
+    res.add(new Object[]{"Hello Mapreduce tests! Nice to meet you!", new String[]{"Hello", "Mapreduce", "tests!", "Nice", "to", "meet", "you!"}, 1, 7});
     return res.toArray(new Object[res.size()][]);
   }
 }

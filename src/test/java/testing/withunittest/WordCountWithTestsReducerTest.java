@@ -8,7 +8,6 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mrunit.mapreduce.MapDriver;
-import org.apache.hadoop.mrunit.mapreduce.MapReduceDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
@@ -26,10 +25,10 @@ import static org.testng.Assert.assertEquals;
  * @version 1.0.0
  * @since 2/3/13, 16:03
  */
-public class WordCountWithTestsJobTest {
-  private static final Logger LOG = LoggerFactory.getLogger(WordCountWithTestsJobTest.class);
+public class WordCountWithTestsReducerTest {
+  private static final Logger LOG = LoggerFactory.getLogger(WordCountWithTestsReducerTest.class);
 
-  private MapReduceDriver<LongWritable, Text, Text, IntWritable, Text, IntWritable> mapRedDriver;
+
 
   @BeforeMethod
   public void setUp() {
