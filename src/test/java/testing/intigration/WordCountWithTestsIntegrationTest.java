@@ -52,6 +52,8 @@ public class WordCountWithTestsIntegrationTest {
 
     //Init dfs cluster
     dfsCluster = new MiniDFSCluster(conf, NUM_DATA_NODE, true, null);
+    getFS().makeQualified(INPUT);
+    getFS().makeQualified(OUTPUT);
 
     //Init mr cluster
     mrCluster = new MiniMRCluster(1, getFS().getUri().toString(), NUM_TASK_TRACKERS);
@@ -188,9 +190,9 @@ public class WordCountWithTestsIntegrationTest {
   public Object[][] createSimpleTestData() {
     List<Object[]> res = new ArrayList<Object[]>();
     res.add(new Object[]{5, new String[]{"Hello Mapreduce tests"}, new String[]{"Hello", "Mapreduce", "tests"}, new int[]{1, 1, 1}});
-//    res.add(new Object[]{5, new String[]{"Hello Mapreduce and tests", "Hello and again", "Hello and Nice to have you again"},
-//            new String[]{"Hello", "Mapreduce", "tests", "again", "and", "Nice", "to", "have", "you"},
-//            new int[]{3, 1, 1, 2, 3, 1, 1, 1, 1}});
+    res.add(new Object[]{5, new String[]{"Hello Mapreduce and tests", "Hello and again", "Hello and Nice to have you again"},
+            new String[]{"Hello", "Mapreduce", "tests", "again", "and", "Nice", "to", "have", "you"},
+            new int[]{3, 1, 1, 2, 3, 1, 1, 1, 1}});
     return res.toArray(new Object[res.size()][]);
   }
 
@@ -199,6 +201,10 @@ public class WordCountWithTestsIntegrationTest {
     if (mrCluster != null) {
       mrCluster.shutdown();
     }
+    if (dfsCluster!=null){
+      dfsCluster.shutdown();
+    }
+
   }
 
 }
