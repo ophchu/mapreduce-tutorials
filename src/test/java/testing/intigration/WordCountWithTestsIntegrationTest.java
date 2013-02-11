@@ -63,7 +63,7 @@ public class WordCountWithTestsIntegrationTest {
   }
 
 
-  @Test(dataProvider = "miniClusterTest")
+  @Test(dataProvider = "miniClusterTest", enabled = false)
   public void miniClusterRun(int reducersNum, String[] inLines, String[] expectedTokens, int[] expectedCount) throws ClassNotFoundException, IOException, InterruptedException {
     //Load input lines into HDFS files
     prepareInputFiles(inLines);
