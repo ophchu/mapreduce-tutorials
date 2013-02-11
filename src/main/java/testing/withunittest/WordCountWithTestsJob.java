@@ -38,6 +38,7 @@ public class WordCountWithTestsJob {
     //Will be overrided by dist env.
     Configuration conf = new Configuration();
     conf.set("hadoop.job.history.user.location", "none");
+    conf.set("mapreduce.job.userhistorylocation", "none");
 //    fs.default.name
     conf.set("mapred.job.tracker", jobTrakcer);
     conf.set("fs.default.name", nameNode);
