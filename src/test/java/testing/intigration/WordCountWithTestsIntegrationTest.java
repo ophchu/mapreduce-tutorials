@@ -67,8 +67,8 @@ public class WordCountWithTestsIntegrationTest {
     WordCountWithTestsJob job = new WordCountWithTestsJob();
 
     //Init HDFS and JobTracker addresses
-    String jobTrakcerName = mrCluster.getJobTrackerRunner().getJobTracker().getHostname() + ":" + mrCluster.getJobTrackerPort();
-    String nameNode = mrCluster.getJobTrackerRunner().getJobTracker().getHostname() + ":" + dfsCluster.getNameNodePort();
+    String jobTrakcerName = String.format("%s:%d", mrCluster.getJobTrackerRunner().getJobTracker().getHostname(), mrCluster.getJobTrackerPort());
+    String nameNode = String.format("hdfs://%s:%d", mrCluster.getJobTrackerRunner().getJobTracker().getHostname(), dfsCluster.getNameNodePort());
     //Run job
     job.runJob(INPUT, OUTPUT, reducersNum, jobTrakcerName, nameNode);
 
