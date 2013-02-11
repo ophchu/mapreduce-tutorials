@@ -32,17 +32,10 @@ public class WordCountWithTestsJob {
 
   public final static String JOB_DATE_FORMAT_STRING = "yyyyMMdd-HHmmss";
 
-  public void runJob(Path inFile, Path outFile, int reducerNum, String jobTrakcer, String nameNode) throws IOException, ClassNotFoundException, InterruptedException {
+  public void runJob(Path inFile, Path outFile, int reducerNum, Configuration conf) throws IOException, ClassNotFoundException, InterruptedException {
     //Initializing job
     //Configuration created with the default params (in here - local) and override by environment.
     //Will be overrided by dist env.
-    Configuration conf = new Configuration();
-
-
-    //Set FS name
-    conf.set("fs.default.name", nameNode);
-    //Set MR name
-    conf.set("mapred.job.tracker", jobTrakcer);
 
     //Set the job's name
     Job job = new Job(conf, "wordcount");
@@ -80,7 +73,8 @@ public class WordCountWithTestsJob {
   }
 
   public static void main(String[] args) throws Exception {
+    Configuration conf = new Configuration();
     WordCountWithTestsJob wcntJob = new WordCountWithTestsJob();
-    wcntJob.runJob(new Path(args[0]), new Path(args[1]), 4, "local", "local");
+    wcntJob.runJob(new Path(args[0]), new Path(args[1]), 4, conf);
   }
 }

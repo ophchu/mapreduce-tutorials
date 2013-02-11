@@ -32,8 +32,11 @@ import static org.testng.Assert.assertNull;
  */
 public class WordCountWithTestsIntegrationTest {
   private static final Logger LOG = LoggerFactory.getLogger(WordCountWithTestsIntegrationTest.class);
+
+  private Configuration conf;
   private MiniDFSCluster dfsCluster;
   private MiniMRCluster mrCluster;
+
 
   private final Path INPUT = new Path("input");
   private final Path OUTPUT = new Path("output");
@@ -48,7 +51,7 @@ public class WordCountWithTestsIntegrationTest {
     new File("test-logs").mkdirs();
     System.setProperty("hadoop.log.dir", "test-logs");
 
-    Configuration conf = new Configuration();
+    conf = new Configuration();
 
     //Init dfs cluster
     dfsCluster = new MiniDFSCluster(conf, NUM_DATA_NODE, true, null);
@@ -69,10 +72,13 @@ public class WordCountWithTestsIntegrationTest {
     WordCountWithTestsJob job = new WordCountWithTestsJob();
 
     //Init HDFS and JobTracker addresses
-    String jobTrakcerName = String.format("%s:%d", mrCluster.getJobTrackerRunner().getJobTracker().getHostname(), mrCluster.getJobTrackerPort());
     String nameNode = String.format("hdfs://%s:%d", mrCluster.getJobTrackerRunner().getJobTracker().getHostname(), dfsCluster.getNameNodePort());
+    conf.set("fs.default.name", nameNode);
+    String jobTrakcerName = String.format("%s:%d", mrCluster.getJobTrackerRunner().getJobTracker().getHostname(), mrCluster.getJobTrackerPort());
+    conf.set("mapred.job.tracker", jobTrakcerName);
+
     //Run job
-    job.runJob(INPUT, OUTPUT, reducersNum, jobTrakcerName, nameNode);
+    job.runJob(INPUT, OUTPUT, reducersNum, conf);
 
     //Read results from HDFS output dir
     Map<String, Integer> results = readResults(reducersNum);
@@ -201,7 +207,7 @@ public class WordCountWithTestsIntegrationTest {
     if (mrCluster != null) {
       mrCluster.shutdown();
     }
-    if (dfsCluster!=null){
+    if (dfsCluster != null) {
       dfsCluster.shutdown();
     }
 
