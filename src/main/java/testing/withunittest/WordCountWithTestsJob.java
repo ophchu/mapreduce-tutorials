@@ -37,7 +37,7 @@ public class WordCountWithTestsJob {
     //Configuration created with the default params (in here - local) and override by environment.
     //Will be overrided by dist env.
     Configuration conf = new Configuration();
-
+    conf.set("hadoop.job.history.user.location", "none");
 //    fs.default.name
     conf.set("mapred.job.tracker", jobTrakcer);
     conf.set("fs.default.name", nameNode);
